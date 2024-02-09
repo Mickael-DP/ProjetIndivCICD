@@ -266,8 +266,10 @@ const Forms = () => {
 				open={openSnackbar}
 				autoHideDuration={6000}
 				onClose={handleCloseSnackbar}
-				anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
+				anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+				data-testid='error-snackbar'>
 				<Alert
+					data-testid='error-alert'
 					onClose={handleCloseSnackbar}
 					severity='error'>
 					{errorMessage || 'Veuillez remplir les champs obligatoires.'}
