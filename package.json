@@ -20,7 +20,7 @@
     "build": "react-scripts build",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
-    "test": "react-scripts test --coverage --collectCoverageFrom=src/*js --collectCoverageFrom=!src/reportWebVitals.js --collectCoverageFrom=!src/index.js --watchAll=false",
+    "test": "react-scripts test --coverage --collectCoverageFrom=src/**/*js --collectCoverageFrom=!src/reportWebVitals.js --collectCoverageFrom=!src/index.js --watchAll=false",
     "eject": "react-scripts eject",
     "jsdoc": "jsdoc -c ./jsdoc.config.json -r -d ./docs"
   },
