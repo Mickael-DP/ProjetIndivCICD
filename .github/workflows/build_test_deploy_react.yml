@@ -26,13 +26,12 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Generate JSDoc
-        run: npm run jsdoc
-      - name: npm ci, build and test
+      - name: npm ci, build and test and generate jsdoc
         run: |
           npm ci
           npm run build --if-present
           npm test
+          npm run jsdoc
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
