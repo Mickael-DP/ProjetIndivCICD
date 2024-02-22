@@ -56,7 +56,6 @@ jobs:
           # Deploy to GitHub Pages
 
   deploy:
-
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -67,7 +66,7 @@ jobs:
       - name: Download artifact from previous job
         uses: actions/download-artifact@v2
         with:
-          name: build
+          name: github-pages
           path: build
 
       - name: Copy README to build directory
