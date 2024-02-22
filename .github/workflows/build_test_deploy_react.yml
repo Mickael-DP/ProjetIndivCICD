@@ -32,12 +32,14 @@ jobs:
           npm run jsdoc
           npm run build --if-present
           npm test
-
-      - name: Update build version
-        id: update_build_version
+      - name: Update versionning
         run: |
-          BUILD_VERSION="v${GITHUB_RUN_ID}-${GITHUB_RUN_NUMBER}-${GITHUB_RUN_ATTEMPT}"
-          echo "BUILD_VERSION=${BUILD_VERSION}" >> $GITHUB_ENV
+          git config --global user.email "m.dallepasqualine@gmail.com"
+          git config --global user.name "Mickael DP"
+          npm i -g semver
+          npm version $(semver 0.1.1 -i prerelease --preid ${{github.run_id}}-${{github.run_number}}-${{github.run_attempt}})
+          echo $(semver 0.1.1 -i prerelease --preid ${{github.run_id}}-${{github.run_number}}-${{github.run_attempt}}) >> README.md
+          git commit -a -m "new version ${{github.run_id}}-${{github.run_number}}-${{github.run_attempt}}"
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
@@ -61,30 +63,16 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
 
-
     # Grant GITHUB_TOKEN the permissions to deploy to GitHub Pages
 
     permissions:
       pages: write # to deploy to GitHub Pages
       id-token: write # to verify the deployment originates from an approriate source
 
-    needs: build_test
-
+    needs:
+      build_test
+      # Specify runner + deployment step
     steps:
-      - name: Download artifact from previous job
-        uses: actions/download-artifact@v2
-        with:
-          name: github-pages
-          path: build
-
-      - name: Copy README to build directory
-        run: cp README.md build/
-
-      - name: Update README with artifact link
-        run: |
-          echo "[Link to Artifact](./build)" >> build/README.md
-
       - name: Deploy to GitHub Pages
+        id: deployment
         uses: actions/deploy-pages@v2
-        with:
-          build_version: ${{ env.BUILD_VERSION }}
