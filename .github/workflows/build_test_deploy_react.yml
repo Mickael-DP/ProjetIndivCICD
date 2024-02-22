@@ -73,7 +73,7 @@ jobs:
 
     steps:
       - name: Copy README to build directory
-        run: cp README.md build/
+        run: cp path/to/README.md build/
       - name: Download previous artifact
         uses: actions/download-artifact@v2
         with:
