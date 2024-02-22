@@ -32,7 +32,12 @@ jobs:
           npm run jsdoc
           npm run build --if-present
           npm test
-          
+
+      - name: Update build version
+        id: update_build_version
+        run: |
+          BUILD_VERSION="v${GITHUB_RUN_ID}-${GITHUB_RUN_NUMBER}-${GITHUB_RUN_ATTEMPT}"
+          echo "BUILD_VERSION=${BUILD_VERSION}" >> $GITHUB_ENV
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
@@ -67,6 +72,14 @@ jobs:
     needs: build_test
 
     steps:
+      - name: Copy README to build directory
+        run: cp README.md build/
+      - name: Download previous artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: previous-artifact-name
+          path: build
       - name: Deploy to GitHub Pages
-        id: deployment
         uses: actions/deploy-pages@v2
+        with:
+          build_version: ${{ env.BUILD_VERSION }}
