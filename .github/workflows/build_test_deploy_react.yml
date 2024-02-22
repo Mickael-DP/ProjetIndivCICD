@@ -11,6 +11,9 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallele
 jobs:
   build_test:
+    permissions: # Job-level permissions configuration starts here
+      contents: write # 'write' access to repository contents
+      pull-requests: write # 'write' access to pull requests
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -26,11 +29,9 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
-      - name: npm ci, build and test and generate jsdoc
+      - name: npm ci and test
         run: |
           npm ci
-          npm run jsdoc
-          npm run build --if-present
           npm test
       - name: Update versionning
         run: |
@@ -40,7 +41,15 @@ jobs:
           npm version $(semver 0.1.1 -i prerelease --preid ${{github.run_id}}-${{github.run_number}}-${{github.run_attempt}})
           echo $(semver 0.1.1 -i prerelease --preid ${{github.run_id}}-${{github.run_number}}-${{github.run_attempt}}) >> README.md
           git commit -a -m "new version ${{github.run_id}}-${{github.run_number}}-${{github.run_attempt}}"
-
+      - name: Build and docs
+        run: |
+          npm run jsdoc
+          npm run build --if-present
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
         env:
