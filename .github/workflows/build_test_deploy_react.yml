@@ -56,29 +56,27 @@ jobs:
           # Deploy to GitHub Pages
 
   deploy:
+
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-
-    # Grant GITHUB_TOKEN the permissions to deploy to GitHub Pages
-
-    permissions:
-      pages: write # to deploy to GitHub Pages
-      id-token: write # to verify the deployment originates from an approriate source
-
-    # Add a dependency to the build job
-
     needs: build_test
 
     steps:
-      - name: Copy README to build directory
-        run: cp path/to/README.md build/
-      - name: Download previous artifact
+      - name: Download artifact from previous job
         uses: actions/download-artifact@v2
         with:
-          name: previous-artifact-name
+          name: build
           path: build
+
+      - name: Copy README to build directory
+        run: cp README.md build/
+
+      - name: Update README with artifact link
+        run: |
+          echo "[Link to Artifact](./build)" >> build/README.md
+
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v2
         with:
