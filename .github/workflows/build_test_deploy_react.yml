@@ -33,14 +33,17 @@ jobs:
         run: |
           npm ci
           npm test
+      - name: Set env
+        run: |
+          npm i -g semver
+          echo "GITHUB_VERSION_BUILD=$(echo $(semver 0.1.1 -i prerelease --preid ${{github.run_id}}-${{github.run_number}}-${{github.run_attempt}}))" >> $GITHUB_ENV
       - name: Update versionning
         run: |
-          git config --global user.email "m.dallepasqualine@gmail.com"
-          git config --global user.name "Mickael DP"
-          npm i -g semver
-          npm version $(semver 0.1.1 -i prerelease --preid ${{github.run_id}}-${{github.run_number}}-${{github.run_attempt}})
-          echo $(semver 0.1.1 -i prerelease --preid ${{github.run_id}}-${{github.run_number}}-${{github.run_attempt}}) >> README.md
-          git commit -a -m "new version ${{github.run_id}}-${{github.run_number}}-${{github.run_attempt}}"
+          git config --global user.email "loise.fenoll@ynov.com"
+          git config --global user.name "Loïse Fenoll"
+          npm version ${{env.GITHUB_VERSION_BUILD}}
+          echo ${{env.GITHUB_VERSION_BUILD}} >> README.md
+          git commit -a -m "new version ${{env.GITHUB_VERSION_BUILD}}"
       - name: Build and docs
         run: |
           npm run jsdoc
