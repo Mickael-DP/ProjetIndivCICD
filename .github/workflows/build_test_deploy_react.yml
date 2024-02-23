@@ -39,8 +39,8 @@ jobs:
           echo "GITHUB_VERSION_BUILD=$(echo $(semver 0.1.1 -i prerelease --preid ${{github.run_id}}-${{github.run_number}}-${{github.run_attempt}}))" >> $GITHUB_ENV
       - name: Update versionning
         run: |
-          git config --global user.email "loise.fenoll@ynov.com"
-          git config --global user.name "Loïse Fenoll"
+          git config --global user.email "m.dallepasqualine@gmail.com"
+          git config --global user.name "Mickael DP"
           npm version ${{env.GITHUB_VERSION_BUILD}}
           echo ${{env.GITHUB_VERSION_BUILD}} >> README.md
           git commit -a -m "new version ${{env.GITHUB_VERSION_BUILD}}"
