@@ -4,8 +4,8 @@ WORKDIR /my-app-test
 
 ENV PATH /my-app-test/node_modules/.bin:$PATH
 
-COPY package.json ./
-COPY package-lock.json ./
+COPY ./app/package.json ./
+COPY ./app/package-lock.json ./
 RUN npm install --silent
 RUN npm install react-scripts@5.0.1 -g --silent
 

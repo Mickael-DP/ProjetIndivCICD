@@ -14,6 +14,7 @@ function App() {
 				const api = axios.create({
 					baseURL: `http://localhost:${port}`,
 				});
+				console.log('api:', api);
 				const response = await api.get(`/users`);
 				setUsersCount(response.data.utilisateurs.length);
 			} catch (error) {
